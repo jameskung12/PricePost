@@ -1,0 +1,4 @@
+Changelog (8/12/2014)
+1) Moving main window function to separate function
+2) Adding postal and money function but still not working
+3) Adding limitation exceed warning for parcel function
