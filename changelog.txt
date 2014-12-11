@@ -1,3 +1,2 @@
-Changelog (9/12/2014)
-1) Alpha edition of parcel window
-2) Reduced number of line
+Changelog (11/12/2014)
+Added all windows
