@@ -1,2 +1,2 @@
-Changelog (11/12/2014)
-Added all windows
+Changelog (14/12/2014)
+Bug fixes
