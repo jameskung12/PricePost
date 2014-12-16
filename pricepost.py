@@ -3,6 +3,7 @@ PricePost, IT KMITL project Version 0.02 alpha
 """
 from Tkinter import *
 def w_exit():
+    aaaa
     """Program exit function"""
     import sys; sys.exit()
 """Class for main window"""
