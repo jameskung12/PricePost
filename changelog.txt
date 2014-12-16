@@ -1,2 +1,2 @@
-Changelog (14/12/2014)
-Bug fixes
+Changelog (16/12/2014)
+Prepare for the final version, but bug still unfixed
