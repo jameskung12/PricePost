@@ -5,11 +5,13 @@ from Tkinter import *
 def w_exit():
     """Program exit function"""
     import sys; sys.exit()
+"""Class for main window"""
 class PricePost(object):
     def __init__(price_post):
         """Main window"""
         price_post.root = Tk()
-        price_post.root.title("PricePost, IT KMITL project (Version 0.02 alpha)")
+        price_post.root.title("PricePost, IT KMITL project")
+        price_post.root.geometry("224x160")
         price_post.mw_lbl1 = Label(price_post.root, text="Welcome to PricePost").pack()
         price_post.btn_post = Button(price_post.root, text="Click here for postal and EMS", command=price_post.postal_win).pack()
         price_post.btn_parcel = Button(price_post.root, text="Click here for normal parcel", command=price_post.parcel_win).pack()
@@ -25,7 +27,7 @@ class PricePost(object):
         price_post.po_weight = IntVar()
         price_post.po_weight = Entry(price_post.postal, textvariable=price_post.po_weight)
         price_post.po_weight.pack()
-        price_post.pow_label2 = Label(price_post.postal, text="Please enter type (Normal, EMS, Online)").pack()
+        price_post.pow_label2 = Label(price_post.postal, text="Please enter type (Normal, Registered, EMS)").pack()
         price_post.po_type = StringVar()
         price_post.po_type = Entry(price_post.postal, textvariable=price_post.po_type)
         price_post.po_type.pack()
@@ -43,6 +45,7 @@ class PricePost(object):
         """Parcel window"""
         price_post.parcel = Tk()
         price_post.parcel.title("Parcel calculation")
+        price_post.parcel.geometry("160x128")
         price_post.paw_label1 = Label(price_post.parcel, text="Please enter weight (in kg)").pack()
         price_post.pa_weight = IntVar()
         price_post.pa_weight = Entry(price_post.parcel, textvariable=price_post.pa_weight)
@@ -88,15 +91,16 @@ class PricePost(object):
         price_post.w_about = Tk()
         price_post.w_about.title("About")
         price_post.aw_label1 = Label(price_post.w_about, text="PricePost, IT KMITL PSIT project").pack()
-        price_post.aw_label2 = Label(price_post.w_about, text="Version 0.01 alpha, Developed by").pack()
-        price_post.aw_label3 = Label(price_post.w_about, text="Palit Wiboonlit, 57070085").pack()
-        price_post.aw_label4 = Label(price_post.w_about, text="57").pack()
+        price_post.aw_label2 = Label(price_post.w_about, text="Version 1.0, Developed by :").pack()
+        price_post.aw_label3 = Label(price_post.w_about, text="Palit Wiboonlit, ID 57070085").pack()
+        price_post.aw_label4 = Label(price_post.w_about, text="Pachara Pinyopornpanich, ID 55070076").pack()
         price_post.aw_label5 = Label(price_post.w_about, text="Semaster 1, 2014").pack()
         price_post.aw_close = Button(price_post.w_about, text="Close", command=price_post.aw_close).pack()
         price_post.w_about.mainloop()
     def aw_close(price_post):
         """Close about window"""
         price_post.w_about.destroy()
+"""Class for postal calculation"""
 class Postal():
     def __init__(price_post, p_weight, p_type):
         """Calling postal weight and type value"""
@@ -104,7 +108,81 @@ class Postal():
         price_post.po_type = str(p_type)
     def postal(price_post, fees=0):
         """Calculation"""
-        return price_post.po_weight
+        if price_post.po_weight <= 20:
+            price_post.po_weight = 1
+        else:
+            if price_post.po_weight <= 100:
+                price_post.po_weight = 2
+            elif price_post.po_weight <= 250:
+                price_post.po_weight = 3
+            elif price_post.po_weight <= 500:
+                price_post.po_weight = 4
+            elif price_post.po_weight > 500:
+                price_post.po_weight = price_post.po_weight / 500.0
+                if price_post.po_weight == 1:
+                    price_post.po_weight = 5
+                elif price_post.po_weight % 1 == 0:
+                    price_post.po_weight = (int(price_post.po_weight) - 1) + 4
+                else:
+                    price_post.po_weight = int(price_post.po_weight) + 4
+        if price_post.po_type == "ems" or  price_post.po_type == "EMS":
+            fees = 32
+            num = 5
+            if price_post.po_weight > 23:
+                return "Error, try again"
+            else:
+                for i in range(1,  price_post.po_weight):
+                    if i == 1 or i == 2 or i == 3:
+                        if i == 3:
+                            num = 10
+                        else:
+                            num = 5
+                    elif i == 4 or i == 5 or i == 6 or i == 8:
+                        num = 15
+                    elif i == 9 or i == 10 or i == 11 or i == 12:
+                        num = 20
+                    elif i == 19 or i == 20 or i == 21 or i == 22 or i == 23:
+                        num = 30
+                    else:
+                        num = 25
+                    fees += num
+                return "Total fees is : " + "%.02f" % fees + " BHT"
+            
+        elif price_post.po_type == "Registered" or price_post.po_type == "registered"\
+         or price_post.po_type == "Normal" or price_post.po_type == "normal":
+            if price_post.po_weight <= 7 :
+                if price_post.po_type == "Registered" or price_post.po_type == "registered":
+                    fees = 16
+                    num = 2
+                    for i in range(1, price_post.po_weight):
+                        fees += num
+                        if i >= 3:
+                            if i >= 4:
+                                num = 20
+                                if i >= 5:
+                                    num -= 20
+                            else:
+                                num = 10
+                        else:
+                            num += 2
+                elif price_post.po_type == "Normal" or price_post.po_type == "normal":
+                    fees = 3
+                    num = 2
+                    for i in range(1, price_post.po_weight):
+                        fees += num
+                        if i >= 3:
+                            if i >= 4:
+                                num = 20
+                                if i >= 5:
+                                    num -= 20
+                            else:
+                                num = 10
+                        else:
+                            num += 2
+                return "Total fees is : " + "%.02f" % fees + " BHT"
+            else:
+                return "Error, try again"
+"""Class for parcel calculation"""
 class Parcel():
     def __init__(price_post, weight):
         """Calling parcel weight value"""
@@ -113,13 +191,14 @@ class Parcel():
         """Calculation"""
         if price_post.pa_weight > 20:
             return "Limitation of sending is 20 kg"
-        elif price_post.pa_weight > 0 or price_post.pa_weight <= 20:
+        elif price_post.pa_weight > 0 and price_post.pa_weight <= 20:
             fees = 20
             for i in range(1, price_post.pa_weight):
                 fees += 15
-            return "Total fees is : " + str(fees) + " BHT"
+            return "Total fees is : " + "%.02f" % fees + " BHT"
         else:
             return "Error, try again"
+"""Class for money calculation"""
 class Money():
     def __init__(price_post, m_total, m_type):
         """Calling money to send and type value"""

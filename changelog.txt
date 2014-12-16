@@ -1,2 +1,3 @@
-Changelog (16/12/2014)
-Prepare for the final version, but bug still unfixed
+PricePost v1.0
+Functionality
+- Calculate a fee of postal, parcel, money sending on postal services
