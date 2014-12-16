@@ -1,5 +1,5 @@
 """
-PricePost, IT KMITL project Version 0.01 alpha
+PricePost, IT KMITL project Version 0.02 alpha
 """
 from Tkinter import *
 def w_exit():
@@ -9,7 +9,7 @@ class PricePost(object):
     def __init__(price_post):
         """Main window"""
         price_post.root = Tk()
-        price_post.root.title("PricePost, IT KMITL project (Version 0.01 alpha)")
+        price_post.root.title("PricePost, IT KMITL project (Version 0.02 alpha)")
         price_post.mw_lbl1 = Label(price_post.root, text="Welcome to PricePost").pack()
         price_post.btn_post = Button(price_post.root, text="Click here for postal and EMS", command=price_post.postal_win).pack()
         price_post.btn_parcel = Button(price_post.root, text="Click here for normal parcel", command=price_post.parcel_win).pack()
@@ -25,11 +25,10 @@ class PricePost(object):
         price_post.po_weight = IntVar()
         price_post.po_weight = Entry(price_post.postal, textvariable=price_post.po_weight)
         price_post.po_weight.pack()
-        #price_post.pow_label2 = Label(price_post.postal, text="Please select type").pack()
-        price_post.po_type = IntVar()
-        #price_post.pow_radio1 = Radiobutton(price_post.postal, text="Normal" ,variable=price_post.po_type, value=1).pack()
-        #price_post.pow_radio2 = Radiobutton(price_post.postal, text="Registered", variable=price_post.po_type, value=2).pack()
-        #price_post.pow_radio3 = Radiobutton(price_post.postal, text="EMS", variable=price_post.po_type, value=3).pack()
+        price_post.pow_label2 = Label(price_post.postal, text="Please enter type (Normal, EMS, Online)").pack()
+        price_post.po_type = StringVar()
+        price_post.po_type = Entry(price_post.postal, textvariable=price_post.po_type)
+        price_post.po_type.pack()
         price_post.pow_e_button = Button(price_post.postal, text="Enter", command=price_post.c_postal).pack()
         price_post.pow_r_button = Button(price_post.postal, text="Reset", command=price_post.postal_res).pack()
         price_post.postal.mainloop()
@@ -68,11 +67,10 @@ class PricePost(object):
         price_post.mo_total = IntVar()
         price_post.mo_total = Entry(price_post.money, textvariable=price_post.mo_total)
         price_post.mo_total.pack()
-        #price_post.mw_label2 = Label(price_post.money, text="Please select type").pack()
-        price_post.mo_type = IntVar()
-        #price_post.mo_radio1 = Radiobutton(price_post.money, text="Normal", variable=price_post.mo_type, value=1).pack()
-        #price_post.mo_radio2 = Radiobutton(price_post.money, text="EMS", variable=price_post.mo_type, value=2).pack()
-        #price_post.mo_radio3 = Radiobutton(price_post.money, text="Online", variable=price_post.mo_type, value=3).pack()
+        price_post.mw_label2 = Label(price_post.money, text="Please enter type (Normal, EMS, Online)").pack()
+        price_post.mo_type = StringVar()
+        price_post.mo_type = Entry(price_post.money, textvariable=price_post.mo_type)
+        price_post.mo_type.pack()
         price_post.mw_e_button = Button(price_post.money, text="Enter", command=price_post.c_money).pack()
         price_post.mw_r_button = Button(price_post.money, text="Reset", command=price_post.money_res).pack()
         price_post.money.mainloop()
@@ -80,7 +78,7 @@ class PricePost(object):
         """Call money class and return value"""
         mo_calc = Money(price_post.mo_total.get(), price_post.mo_type.get())
         res_call = mo_calc.money()
-        price_post.mw_label2 = Label(price_post.money, text=res_call).pack()
+        price_post.mw_label3 = Label(price_post.money, text=res_call).pack()
     def money_res(price_post):
         """Reset money window"""
         price_post.money.destroy()
@@ -103,7 +101,7 @@ class Postal():
     def __init__(price_post, p_weight, p_type):
         """Calling postal weight and type value"""
         price_post.po_weight = int(p_weight)
-        price_post.po_type = int(p_type)
+        price_post.po_type = str(p_type)
     def postal(price_post, fees=0):
         """Calculation"""
         return price_post.po_weight
@@ -126,26 +124,40 @@ class Money():
     def __init__(price_post, m_total, m_type):
         """Calling money to send and type value"""
         price_post.mo_total = int(m_total)
-        price_post.mo_type = m_type
+        price_post.mo_type = str(m_type)
     def money(price_post, fees=0):
         """Calculation"""
         if price_post.mo_total > 50000:
             return "Limitation of sending is 50,000 BHT"
         elif price_post.mo_total >= 1 and price_post.mo_total <= 50000:
-            return price_post.mo_total
-            #if price_post.mo_radio == 3:
-                #fees = 50; price_post.mo_total = int(price_post.mo_total / 10000)
-                #for i in range(1, price_post.mo_total+1):
-                    #fees += 10
-            #elif price_post.mo_radio == 1 or price_post.mo_radio == 2:
-                #if price_post.mo_radio == 1:
-                    #fees = 10.7
-                #elif price_post.mo_radio == 2:
-                    #fees = 44.94
-                #price_post.mo_total = int(price_post.mo_total / 1000)
-            #for i in range(1, price_post.mo_total+1):
-                #fees += 2.14
-            #return "Total fees is : " + "%.02f" % fees + " BHT"
+            if price_post.mo_type == "Online" or price_post.mo_type == "online":
+                fees = 50
+                if price_post.mo_total % 10000 == 0:
+                    price_post.mo_total = int(price_post.mo_total / 10000)
+                    for i in range(1, price_post.mo_total):
+                        fees += 10
+                else:
+                    price_post.mo_total = int(price_post.mo_total / 10000)
+                    for i in range(1, price_post.mo_total+1):
+                        fees += 10
+                return "Total fees is : " + "%.02f" % fees + " BHT"
+            elif price_post.mo_type == "Normal" or price_post.mo_type == "normal"\
+                 or price_post.mo_type == "EMS" or price_post.mo_type == "ems":
+                if price_post.mo_type == "Normal" or price_post.mo_type == "normal":
+                    fees = 10.7
+                elif price_post.mo_type == "EMS" or price_post.mo_type == "ems":
+                    fees = 44.94
+                if price_post.mo_total % 1000 == 0:
+                    price_post.mo_total = int(price_post.mo_total / 1000)
+                    for i in range(1, price_post.mo_total):
+                        fees += 2.14
+                else:
+                    price_post.mo_total = int(price_post.mo_total / 1000)
+                    for i in range(1, price_post.mo_total+1):
+                        fees += 2.14
+                return "Total fees is : " + "%.02f" % fees + " BHT"
+            else:
+                return "Error, try again"
         else:
             return "Error, try again"
 PricePost()
